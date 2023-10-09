@@ -1,0 +1,40 @@
+name: Deploy to GitHub Pages
+
+on:
+  workflow_run:
+    workflows: [Test]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: build
+        env:
+          BASE_PATH: '/svelte-monaco-taplo'
+        run: |
+          npm run build
+          touch build/.nojekyll
+      - uses: actions/upload-pages-artifact@v2
+        with:
+          path: 'build/'
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v2

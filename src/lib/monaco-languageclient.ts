@@ -1,13 +1,16 @@
 import { MonacoLanguageClient, initServices } from 'monaco-languageclient';
 import { type ExtensionHostKind, registerExtension } from 'vscode/extensions';
 import { CloseAction, ErrorAction } from 'vscode-languageclient';
+import type { Message } from 'vscode-languageserver-protocol';
 import {
 	BrowserMessageReader,
 	BrowserMessageWriter
 } from 'vscode-languageserver-protocol/browser.js';
+import type { Schema } from '$lib/schema.js';
 import TaploWorker from '$lib/taplo?worker';
+import { INITIALIZE_TAPLO, type RUST_LOG } from '$lib/taplo-initialize-method.js';
 
-(async () => {
+async function start(schema: Schema, logLevel: RUST_LOG) {
 	const name = 'TOML';
 	const languageId = 'toml';
 
@@ -18,6 +21,12 @@ import TaploWorker from '$lib/taplo?worker';
 	const worker = new TaploWorker();
 	const reader = new BrowserMessageReader(worker);
 	const writer = new BrowserMessageWriter(worker);
+
+	await writer.write({
+		jsonrpc: '2.0',
+		method: INITIALIZE_TAPLO,
+		params: [schema, logLevel]
+	} as Message);
 
 	const languageClient = new MonacoLanguageClient({
 		name: name,
@@ -59,4 +68,6 @@ import TaploWorker from '$lib/taplo?worker';
 
 	const extHostKind: ExtensionHostKind.LocalProcess = 1;
 	registerExtension(extension, extHostKind, {});
-})();
+}
+
+export { start };

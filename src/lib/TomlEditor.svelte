@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+	import type { Schema } from '$lib/schema.js';
 
 	export let options: Monaco.editor.IStandaloneEditorConstructionOptions = {};
+	export let schema: Schema = null;
 	export let style: string = '';
 	export let value: string = '';
 
@@ -13,8 +15,9 @@
 	let edited = false;
 
 	onMount(async () => {
-		const m = (await import('./monaco.js')).default;
-		await import('./monaco-languageclient.js');
+		const { monaco: m } = await import('./monaco.js');
+		const { start } = await import('./monaco-languageclient.js');
+		await start(schema, 'off');
 		monaco = m;
 	});
 

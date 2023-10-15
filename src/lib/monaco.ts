@@ -9,4 +9,4 @@ if (!self.MonacoEnvironment) {
 	};
 }
 
-export default monaco;
+export { monaco };

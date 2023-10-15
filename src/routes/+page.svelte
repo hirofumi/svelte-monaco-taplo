@@ -2,6 +2,7 @@
 	import TomlEditor from '$lib/TomlEditor.svelte';
 
 	let minimapEnabled = false;
+	let schema = { url: 'https://taplo.tamasfe.dev/schemas/Cargo.toml.json' };
 	let value = [
 		'[package]',
 		'name = "foo"',
@@ -27,5 +28,6 @@
 		},
 		scrollBeyondLastLine: false
 	}}
+	{schema}
 	bind:value
 />

@@ -138,3 +138,6 @@ dist
 /package
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Playwright
+/test-results

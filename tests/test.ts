@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-test('monaco editor should be created', async ({ page }) => {
+test('monaco editor should load example', async ({ page }) => {
 	await page.goto('/');
-	await page.locator('.monaco-editor').waitFor();
-	const got = (await page.locator('.monaco-editor').allInnerTexts()).join('');
-	expect(got).toContain('[package]');
+	const editor = page.locator('.monaco-editor');
+	await editor.waitFor();
+	await expect(editor).toContainText('[package]');
 });

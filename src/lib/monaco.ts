@@ -1,5 +1,5 @@
 import * as monaco from 'monaco-editor';
-import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import EditorWorker from '../../node_modules/monaco-editor-workers/dist/workers/editorWorker-es?worker';
 
 if (!self.MonacoEnvironment) {
 	self.MonacoEnvironment = {
